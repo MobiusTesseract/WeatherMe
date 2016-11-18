@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">WeatherMe!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="fab_actionText">Refresh</string>
+    <string name="fab_actionMessage">Refresh not implemented yet</string>
+
+    <string name="dummyTitle">Today, November 14</string>
+    <string name="dummyHighTemp">14°</string>
+    <string name="dummyLowTemp">4°</string>
+    <string name="dummyIconDesc">Weather Icon</string>
+    <string name="dummyStatus">Partly Cloudy</string>
+
+</resources>
