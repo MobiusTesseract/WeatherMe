@@ -5,10 +5,10 @@
     <string name="fab_actionText">Refresh</string>
     <string name="fab_actionMessage">Refresh not implemented yet</string>
 
-    <string name="dummyTitle">Today, November 14</string>
-    <string name="dummyHighTemp">14°</string>
+    <string name="dummyTitle">Today, November 18</string>
+    <string name="dummyHighTemp">15°</string>
     <string name="dummyLowTemp">4°</string>
     <string name="dummyIconDesc">Weather Icon</string>
-    <string name="dummyStatus">Partly Cloudy</string>
+    <string name="dummyStatus">Mostly Sunny</string>
 
 </resources>
