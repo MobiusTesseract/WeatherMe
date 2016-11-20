@@ -3,6 +3,7 @@ package one.tesseract.weatherme;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +38,7 @@ import java.util.Locale;
  */
 public class ForecastFragment extends Fragment {
 
-    ArrayAdapter<String> mForecastAdapter;
+    private ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
     }
@@ -108,6 +109,12 @@ public class ForecastFragment extends Fragment {
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Snackbar.make(getView(), R.string.snackbar_refresh_message, Snackbar.LENGTH_LONG).show();
+        }
+
+        @Override
         protected String[] doInBackground(String... strings) {
 
             // Verify size of params. If there's no query, there's nothing to look up.
@@ -144,7 +151,7 @@ public class ForecastFragment extends Fragment {
                         .appendQueryParameter("q", strings[0])
                         .appendQueryParameter("appid", BuildConfig.OPEN_WEATHER_MAP_API_KEY);
 
-                Log.v(LOG_TAG, "uriBuilder URI: " + uriBuilder.toString());
+                //Log.v(LOG_TAG, "uriBuilder URI: " + uriBuilder.toString());
                 URL url = new URL(uriBuilder.build().toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
@@ -174,7 +181,7 @@ public class ForecastFragment extends Fragment {
                     return null;
                 }
                 forecastJsonStr = stringBuilder.toString();
-                Log.v(LOG_TAG, "Forecast JSON string: " + forecastJsonStr);
+                //Log.v(LOG_TAG, "Forecast JSON string: " + forecastJsonStr);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in
@@ -298,9 +305,9 @@ public class ForecastFragment extends Fragment {
                 resultStrings[i] = day + " - " + description + " - " + highAndLow;
             }
 
-            for (String s : resultStrings) {
+            /*for (String s : resultStrings) {
                 Log.v(LOG_TAG, "Forecast entry: " + s);
-            }
+            } */
             return resultStrings;
         }
     }
