@@ -1,5 +1,6 @@
 package one.tesseract.weatherme;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,7 +45,7 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                new FetchWeatherTask().execute();
+                new FetchWeatherTask().execute("Thessaloniki,GR");
                 return true;
         }
 
@@ -87,12 +88,18 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchWeatherTask extends AsyncTask<Void, Void, String> {
+    public class FetchWeatherTask extends AsyncTask<String, Void, String> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
-        protected String doInBackground(Void... voids) {
+        protected String doInBackground(String... strings) {
+
+            // Verify size of params. If there's no query, there's nothing to look up.
+            if (strings.length == 0) {
+                return null;
+            }
+
             /**
              * Network code to get the OpenWeatherMap JSON response
              */
@@ -104,19 +111,26 @@ public class ForecastFragment extends Fragment {
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
 
+            String units = "metric";
+            int numberOfDays = 7;
+
             try {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are available at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
 
-                /* [The way Udacity does it] IMHO too much
-                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?cnt=7&q=Thessaloniki,GR&units=metric&mode=json";
-                String apiKey = "&appid=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-                URL url = new URL(baseUrl.concat(apiKey));
-                 */
+                Uri.Builder uriBuilder = new Uri.Builder()
+                        .scheme("http")
+                        .authority("api.openweathermap.org")
+                        .path("data/2.5/forecast/daily")
+                        .appendQueryParameter("mode", "json")
+                        .appendQueryParameter("cnt", Integer.toString(numberOfDays))
+                        .appendQueryParameter("units", units)
+                        .appendQueryParameter("q", strings[0])
+                        .appendQueryParameter("appid", BuildConfig.OPEN_WEATHER_MAP_API_KEY);
 
-                // This works just fine
-                URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?cnt=7&q=Thessaloniki,GR&units=metric&mode=json&appid=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY);
+                Log.v(LOG_TAG, "uriBuilder URI: " + uriBuilder.toString());
+                URL url = new URL(uriBuilder.build().toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -125,7 +139,7 @@ public class ForecastFragment extends Fragment {
 
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
-                StringBuilder builder = new StringBuilder();
+                StringBuilder stringBuilder = new StringBuilder();
                 if (inputStream == null) {
                     // Nothing to do.
                     return null;
@@ -136,15 +150,15 @@ public class ForecastFragment extends Fragment {
                 while ((line = reader.readLine()) != null) {
                     // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                     // But it does make debugging a *lot* easier if you print out the completed
-                    // builder for debugging.
-                    builder.append(line).append("\n");
+                    // stringBuilder for debugging.
+                    stringBuilder.append(line).append("\n");
                 }
 
-                if (builder.length() == 0) {
+                if (stringBuilder.length() == 0) {
                     // Stream was empty.  No point in parsing.
                     return null;
                 }
-                forecastJsonStr = builder.toString();
+                forecastJsonStr = stringBuilder.toString();
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attempting
