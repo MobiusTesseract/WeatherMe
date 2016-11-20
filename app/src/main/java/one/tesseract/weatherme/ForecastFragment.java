@@ -25,14 +25,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
+
+    ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
     }
@@ -68,7 +73,7 @@ public class ForecastFragment extends Fragment {
         /**
          * Dummy data
          */
-        String[] weekForecast = {
+        String[] data = {
                 "Mon 11/14 - Sunny - 31/17",
                 "Tue 11/15 - Foggy - 21/8",
                 "Wed 11/16 - Cloudy - 22/17",
@@ -78,10 +83,12 @@ public class ForecastFragment extends Fragment {
                 "Sun 11/20 - Sunny - 20/7"
         };
 
+        List<String> weekForecast = new ArrayList<>(Arrays.asList(data));
+
         /**
          * Create an adapter that makes ListView items from an Array or ArrayList
          */
-        ArrayAdapter<String> mForecastAdapter = new ArrayAdapter<>(
+        mForecastAdapter = new ArrayAdapter<>(
                 getActivity(),
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textView,
@@ -196,6 +203,16 @@ public class ForecastFragment extends Fragment {
 
             // If getting or parsing the JSON response failed
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] parsedWeekForecast) {
+            super.onPostExecute(parsedWeekForecast);
+
+            if(parsedWeekForecast != null) {
+                mForecastAdapter.clear();
+                mForecastAdapter.addAll(parsedWeekForecast);
+            }
         }
 
         /* The date/time conversion code is going to be moved outside the AsyncTask later,
