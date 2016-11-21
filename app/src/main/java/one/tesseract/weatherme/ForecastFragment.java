@@ -111,7 +111,7 @@ public class ForecastFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Snackbar.make(getView(), R.string.snackbar_refresh_message, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(getView(), R.string.snackbar_refresh_message, Snackbar.LENGTH_INDEFINITE).show();
         }
 
         @Override
@@ -219,6 +219,9 @@ public class ForecastFragment extends Fragment {
             if(parsedWeekForecast != null) {
                 mForecastAdapter.clear();
                 mForecastAdapter.addAll(parsedWeekForecast);
+                Snackbar.make(getView(), R.string.snackbar_success_message, Snackbar.LENGTH_SHORT).show();
+            } else {
+                Snackbar.make(getView(), R.string.snackbar_fail_message, Snackbar.LENGTH_LONG).show();
             }
         }
 

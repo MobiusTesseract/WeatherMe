@@ -5,6 +5,8 @@
 
     <string name="snackbar_fab_message">Refresh not implemented yet</string>
     <string name="snackbar_refresh_message">Downloading weather data…</string>
+    <string name="snackbar_success_message">Update successful!</string>
+    <string name="snackbar_fail_message">Update failed.</string>
 
     <string name="dummyTitle">Today:\nSaturday, November 20</string>
     <string name="dummyHighTemp">16°</string>
